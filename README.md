@@ -8,7 +8,12 @@ Input: terrain and buildings in Wavefront OBJ format
 Output: terrain elevation, building elevation, and building height raster in [Esri ASCII](https://en.wikipedia.org/wiki/Esri_grid) format
 
 ### Compilation
-Download the repository and do
+Clone the repository with submodules
+```
+git clone --recurse-submodules git@github.com:ipadjen/city-rusterizer.git
+```
+
+To compile, type
 
 ```
 cargo build --release

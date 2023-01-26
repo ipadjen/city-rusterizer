@@ -5,9 +5,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tobj      = "3.2.3"
 ndarray   = "0.15.0"
 geo       = "0.23.0"
 rayon     = "1.5.3"
 indicatif = "0.17.2"
 clap      = { version = "4.0.26", features = ["derive"] }
+
+[dependencies.tobj-f64]
+path = "src/tobj-f64"
