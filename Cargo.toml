@@ -11,5 +11,6 @@ rayon     = "1.5.3"
 indicatif = "0.17.2"
 clap      = { version = "4.0.26", features = ["derive"] }
 
-[dependencies.tobj-f64]
+[dependencies.tobj]
 path = "src/tobj-f64"
+features = ["use_double"]
