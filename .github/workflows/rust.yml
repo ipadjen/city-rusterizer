@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: main
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 6 1 * *' # Run on the first day of every month at 06:00 UTC
+
+jobs:
+    build_linux:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: Build
+          run: cargo build --release --verbose
+        - name: Get GDAL
+          run: |
+              sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+              sudo apt-get update
+              sudo apt-get install libgdal-dev
+        - name: Build with GDAL
+          run: cargo build --release --features with_gdal --verbose 
+        - name: Formatting check
+          run: cargo fmt --check
+
+    build_macos:
+      runs-on: macos-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: Build
+          run: cargo build --release --verbose
+
+    build_windows:
+      runs-on: windows-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: Build
+          run: cargo build --release --verbose 

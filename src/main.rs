@@ -516,7 +516,7 @@ fn main() {
     #[cfg(not(feature = "with_gdal"))]
     if output_format.1 == OutputFormat::TIF {
         panic!(
-            "Rusterizer is not compiled with GDAL!\
+            "Rusterizer is not compiled with GDAL! \
              Use 'cargo build --release --features with_gdal'"
         );
     }
@@ -600,13 +600,17 @@ fn main() {
     // Output rasters
     println!("\nWriting rasters to disk...");
     // group rasters
-    let rasters = [&raster_terrain, &raster_buildings, &raster_buildheights];
+    let rasters = [
+        (&raster_terrain, "terrain"),
+        (&raster_buildings, "buildings elevations"),
+        (&raster_buildheights, "building heights"),
+    ];
     // write to disk
     if output_format.1 == OutputFormat::ASC {
         for (raster, path) in rasters.into_iter().zip(output_filenames.into_iter()) {
-            let re = raster.write_asc(path.to_string());
+            let re = raster.0.write_asc(path.to_string());
             match re {
-                Ok(_x) => println!("--> terrain .asc output saved to '{}'", path),
+                Ok(_x) => println!("--> '{}' .asc output saved to '{}'", raster.1, path),
                 Err(_x) => println!("ERROR: path '{}' doesn't exist, abort.", path),
             }
         }
@@ -615,9 +619,9 @@ fn main() {
         for (_raster, _path) in rasters.into_iter().zip(output_filenames.into_iter()) {
             #[cfg(feature = "with_gdal")]
             {
-                let re = _raster.write_geotiff(_path.to_string(), _epsg);
+                let re = _raster.0.write_geotiff(_path.to_string(), _epsg);
                 match re {
-                    Ok(_x) => println!("--> terrain .tif output saved to '{}'", _path),
+                    Ok(_x) => println!("--> '{}' .tif output saved to '{}'", _raster.1, _path),
                     Err(_x) => println!("ERROR: path '{}' doesn't exist, abort.", _path),
                 }
             }
