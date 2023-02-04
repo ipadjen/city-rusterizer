@@ -11,3 +11,7 @@ rayon     = "1.5.3"
 indicatif = "0.17.2"
 clap      = { version = "4.0.26", features = ["derive"] }
 tobj      = { version = "3.2.4", features = ["use_f64"] }
+gdal      = { version = "0.14.0", features = ["bindgen"], optional = true }
+
+[features]
+with_gdal = ["gdal"]
