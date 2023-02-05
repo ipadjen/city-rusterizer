@@ -460,6 +460,7 @@ impl Raster {
             dataset
                 .set_projection(srs.to_wkt().unwrap().as_str())
                 .unwrap();
+            dataset.set_spatial_ref(&srs).unwrap();
         }
         Ok(())
     }
@@ -610,7 +611,7 @@ fn main() {
         for (raster, path) in rasters.into_iter().zip(output_filenames.into_iter()) {
             let re = raster.0.write_asc(path.to_string());
             match re {
-                Ok(_x) => println!("--> '{}' .asc output saved to '{}'", raster.1, path),
+                Ok(_x) => println!("--> {} .asc output saved to '{}'", raster.1, path),
                 Err(_x) => println!("ERROR: path '{}' doesn't exist, abort.", path),
             }
         }
@@ -621,7 +622,7 @@ fn main() {
             {
                 let re = _raster.0.write_geotiff(_path.to_string(), _epsg);
                 match re {
-                    Ok(_x) => println!("--> '{}' .tif output saved to '{}'", _raster.1, _path),
+                    Ok(_x) => println!("--> {} .tif output saved to '{}'", _raster.1, _path),
                     Err(_x) => println!("ERROR: path '{}' doesn't exist, abort.", _path),
                 }
             }

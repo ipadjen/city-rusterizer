@@ -1,6 +1,6 @@
 [package]
 name = "city-rusterizer"
-description = "Convert 3D geometries (Wavefront OBJ format) of a city (terrain and buildings) into ESRI ASC raster."
+description = "Convert 3D geometries of a city (terrain and buildings) into a raster."
 version = "0.1.0"
 edition = "2021"
 
