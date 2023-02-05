@@ -415,7 +415,7 @@ impl Raster {
 
     // Write raster to disk in GeoTiff format
     #[cfg(feature = "with_gdal")]
-    pub fn write_geotiff(&self, file_path: String, epsg: Option<u32>) -> std::io::Result<()> {
+    pub fn write_geotiff(&self, file_path: String, from_epsg: Option<u32>, to_epsg: Option<u32>) -> std::io::Result<()> {
         // Create a GDAL dataset with the given file path
         let driver = DriverManager::get_driver_by_name("GTiff").unwrap();
         let mut dataset = driver
@@ -454,13 +454,24 @@ impl Raster {
         ];
         dataset.set_geo_transform(&geotransform).unwrap();
 
-        // Set the EPSG code if provided
-        if let Some(epsg) = epsg {
+        // Set the input EPSG code if provided
+        if let Some(epsg) = from_epsg {
             let srs = SpatialRef::from_epsg(epsg).unwrap();
+//            dataset
+//                .set_projection(srs.to_wkt().unwrap().as_str())
+//                .unwrap();
+            dataset.set_spatial_ref(&srs).unwrap();
+        }
+
+        // Reproject to a new EPSG if argument provided
+        if let Some(to_epsg) = to_epsg {
+            let target_srs = SpatialRef::from_epsg(to_epsg).unwrap();
             dataset
-                .set_projection(srs.to_wkt().unwrap().as_str())
+                .set_projection(target_srs.to_wkt().unwrap().as_str())
                 .unwrap();
         }
+
+
         Ok(())
     }
 }
@@ -619,7 +630,7 @@ fn main() {
         for (_raster, _path) in rasters.into_iter().zip(output_filenames.into_iter()) {
             #[cfg(feature = "with_gdal")]
             {
-                let re = _raster.0.write_geotiff(_path.to_string(), _epsg);
+                let re = _raster.0.write_geotiff(_path.to_string(), _epsg, None);
                 match re {
                     Ok(_x) => println!("--> '{}' .tif output saved to '{}'", _raster.1, _path),
                     Err(_x) => println!("ERROR: path '{}' doesn't exist, abort.", _path),
